@@ -1,9 +1,6 @@
 # Compiled class file
 *.class
 
-# Log file
-*.log
-
 # BlueJ files
 *.ctxt
 
@@ -22,3 +19,45 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Archivos y directorios generados por Maven
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Archivos y directorios generados por el IDE (por ejemplo, IntelliJ IDEA o Eclipse)
+.idea/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+.vscode/
+
+# Archivos relacionados con el sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de configuración personalizados que no deben ser compartidos
+application-local.yml
+application-dev.yml
+
+# Archivos temporales o logs
+*.log
+*.tmp
+*.bak
+
+# Archivos relacionados con bases de datos embebidas
+data.mv.db
+data.trace.db
+
+# Directorios para herramientas externas
+node_modules/
+npm-debug.log
+
+# Archivos de respaldo
+*~
+.backup
+
