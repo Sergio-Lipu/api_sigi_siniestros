@@ -27,7 +27,7 @@ public class AjustadorService {
 	 public Ajustador crearAjustador(Ajustador ajustador){
 		 return ajustadorRepository.save(ajustador);
 	 }
-	 
+	 @Transactional
 	 public Ajustador actualizarAjustador(Ajustador ajustador){
 		 return ajustadorRepository.save(ajustador);
 	 }

@@ -17,8 +17,9 @@ import com.api.siniestro.entitys.Ajustador;
 import com.api.siniestro.services.AjustadorService;
 
 @RestController
-@RequestMapping("/ajustadores")
+@RequestMapping("/api/v1/ajustadores")
 public class AjustadorController {
+	
 	@Autowired
 	AjustadorService ajustadorService;
 	    
