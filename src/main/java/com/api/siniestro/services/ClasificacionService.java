@@ -27,7 +27,18 @@ public class ClasificacionService {
 	 }
 	
 	@Transactional
-	public Clasificacion actualizarClasifiacion(Clasificacion aseguradora){
-		return clasificacionRepository.save(aseguradora);
+	public Optional<Clasificacion> actualizarClasifiacion(Long id, Clasificacion clasificacion){
+		Optional<Clasificacion> clasificacionOpt = obtenerClasificacion(id);
+		if (!clasificacionOpt.isPresent()) {
+			return Optional.empty();
+		}
+		
+		Clasificacion actualizarClasificacion = clasificacionOpt.get();
+		
+		actualizarClasificacion.setTipoIncidente(clasificacion.getTipoIncidente());
+		actualizarClasificacion.setTipo(clasificacion.getTipo());
+		actualizarClasificacion.setActivo(clasificacion.getActivo());
+		
+		return Optional.of(clasificacionRepository.save(actualizarClasificacion));
 	 }
 }

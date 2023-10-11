@@ -2,7 +2,6 @@ package com.api.siniestro.services;
 
 import java.util.List;
 import java.util.Optional;
-
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,17 @@ public class AseguradoraService {
 	 }
 	
 	@Transactional
-	public Aseguradora actualizarAseguradora(Aseguradora aseguradora){
-		return aseguradoraRepository.save(aseguradora);
+	public Optional<Aseguradora> actualizarAseguradora(Long id, Aseguradora aseguradora){
+		Optional<Aseguradora> aseguradoraOpt = obtenerAseguradora(id);
+		if (!aseguradoraOpt.isPresent()) {
+			return Optional.empty();
+		}
+		
+		Aseguradora actualizarAseguradora = aseguradoraOpt.get();
+
+		actualizarAseguradora.setAseguradora(aseguradora.getAseguradora());
+		actualizarAseguradora.setActivo(aseguradora.getActivo());
+		
+		return Optional.of(aseguradoraRepository.save(actualizarAseguradora));
 	 }
 }

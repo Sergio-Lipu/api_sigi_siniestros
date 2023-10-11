@@ -1,62 +1,63 @@
 package com.api.siniestro.controllers;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.api.siniestro.entitys.Ajustador;
+import org.springframework.web.bind.annotation.*;
 import com.api.siniestro.services.AjustadorService;
+import com.api.siniestro.dtos.AjustadorDTO;
+import com.api.siniestro.entitys.Ajustador;
 
 @RestController
 @RequestMapping("/api/v1/ajustadores")
 public class AjustadorController {
-	
-	@Autowired
-	AjustadorService ajustadorService;
-	    
-	@GetMapping("/{id}") 
-	public ResponseEntity<Ajustador> obtenerAjustador(@PathVariable Long id) { 
-			return ajustadorService.obtenerAjustador(id)
-					.map(ajustador -> new ResponseEntity<>(ajustador, HttpStatus.OK)) 
-					.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-			}
-		 
-	@GetMapping("/lista")
-	public List<Ajustador> obtenerAjustadores(){
-		return ajustadorService.obtenerAjustadores();
-		}
-	
-	@PostMapping
-    public ResponseEntity<Ajustador> crearAjustador(@RequestBody Ajustador ajustador) {
-        Ajustador nuevoAjustador = ajustadorService.crearAjustador(ajustador);
-        return ResponseEntity.ok(nuevoAjustador);
+
+    private final AjustadorService ajustadorService;
+
+    @Autowired
+    public AjustadorController(AjustadorService ajustadorService) {
+        this.ajustadorService = ajustadorService;
     }
-	
-	@PutMapping("/{id}")
-	public ResponseEntity<Ajustador> actualizarAjustador(@PathVariable Long id,@RequestBody Ajustador ajustador){
-		Optional<Ajustador> ajustadorOpt = ajustadorService.obtenerAjustador(id);
-		if (!ajustadorOpt.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		
-		Ajustador actualizarAjustador = ajustadorOpt.get();
 
-		actualizarAjustador.setNombre(ajustador.getNombre());
-		actualizarAjustador.setActivo(ajustador.getActivo());
-		actualizarAjustador.setIdUnidadNegocio(ajustador.getIdUnidadNegocio());
-		
-		Ajustador ajustadorGuardado = ajustadorService.actualizarAjustador(actualizarAjustador);
-		
-		return ResponseEntity.ok(ajustadorGuardado);
-	}
+    @GetMapping("/{id}") 
+    public ResponseEntity<AjustadorDTO> obtenerAjustador(@PathVariable Long id) { 
+        return ajustadorService.obtenerAjustador(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
+    @GetMapping("/lista")
+    public List<AjustadorDTO> obtenerAjustadores(){
+        return ajustadorService.obtenerAjustadores();
+    }
+
+    @PostMapping("/crear")
+    public ResponseEntity<AjustadorDTO> crearAjustador(@RequestBody AjustadorDTO ajustadorDTO) {
+        return ResponseEntity.ok(ajustadorService.crearAjustador(ajustadorDTO));
+    }
+
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<AjustadorDTO> actualizarAjustador(@PathVariable Long id, @RequestBody AjustadorDTO ajustadorDTO){
+        return ajustadorService.actualizarAjustador(id, ajustadorDTO)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    private AjustadorDTO mapearAjustadorDTO(Ajustador ajustador) {
+        AjustadorDTO ajustadorDTO = new AjustadorDTO();
+        ajustadorDTO.setIdAjustador(ajustador.getIdAjustador());
+        ajustadorDTO.setNombre(ajustador.getNombre());
+        ajustadorDTO.setActivo(ajustador.getActivo()); 
+        ajustadorDTO.setIdUnidadNegocio(ajustador.getIdUnidadNegocio());
+        return ajustadorDTO;
+    }
+
+    private Ajustador mapearAjustadorEntity(AjustadorDTO dto) {
+        Ajustador ajustador = new Ajustador();
+        ajustador.setIdAjustador(dto.getIdAjustador());
+        ajustador.setNombre(dto.getNombre());
+        ajustador.setActivo(dto.getActivo());
+        ajustador.setIdUnidadNegocio(dto.getIdUnidadNegocio());
+        return ajustador;
+    }
 }
